@@ -77,19 +77,19 @@ class Cases extends CI_Controller {
 		 {
 				$now = date('Y-m-d');
 				$user_info = array();
-				$user_info['FirstName']               = $this->input->post('first_name');
-				$user_info['LastName']                = $this->input->post('last_name');
-				$user_info['Position']                = $this->input->post('position');
-				$user_info['Address']                 = $this->input->post('address');
-				$user_info['City']                    = $this->input->post('city');
-				$user_info['State']                   = $this->input->post('state');
-				$user_info['Zip']                     = $this->input->post('zip');
-				$user_info['Country']                 = $this->input->post('country');
-				$user_info['Email']                   = $this->input->post('email_id');
-				$user_info['Password']                = $this->input->post('password');
-				$user_info['PhoneNumber']             = $this->input->post('phone');
-				$user_info['Firm_CompanySize']        = $this->input->post('firm_size');
-				$user_info['HowDidYouHearAboutUs']    = $this->input->post('aboutus');
+				$user_info['FirstName']               = strip_tags($this->input->post('first_name'));
+				$user_info['LastName']                = strip_tags($this->input->post('last_name'));
+				$user_info['Position']                = strip_tags($this->input->post('position'));
+				$user_info['Address']                 = strip_tags($this->input->post('address'));
+				$user_info['City']                    = strip_tags($this->input->post('city'));
+				$user_info['State']                   = strip_tags($this->input->post('state'));
+				$user_info['Zip']                     = strip_tags($this->input->post('zip'));
+				$user_info['Country']                 = strip_tags($this->input->post('country'));
+				$user_info['Email']                   = strip_tags($this->input->post('email_id'));
+				$user_info['Password']                = strip_tags($this->input->post('password'));
+				$user_info['PhoneNumber']             = strip_tags($this->input->post('phone'));
+				$user_info['Firm_CompanySize']        = strip_tags($this->input->post('firm_size'));
+				$user_info['HowDidYouHearAboutUs']    = strip_tags($this->input->post('aboutus'));
 				$user_info['User_type']    = '3';
 				$user_info['UserJoinedOn']    = $now;
 				
@@ -131,7 +131,16 @@ class Cases extends CI_Controller {
 		  
 		   public function editcase($id='')
 		   {
+				if($id == ''){
+					redirect('login');
+				}
 				
+				$sesson_data = $this->session->userdata('logged_in');
+				$UserID = $sesson_data['UserID'];
+				if($sesson_data['User_type']==3){
+					$this->case_model->allowaccess($id,$UserID);
+					//exit;
+				}
 				
 			  if(isset($_REQUEST['btn_update']))
 				{
@@ -143,37 +152,37 @@ class Cases extends CI_Controller {
 				    }
 					$UserID = $session_data['UserID'];
 					//first party
-					$data['firstparty_represnt']        = $this->input->post('firstparty_represnt');
-					$data['firstpartyPlain_defendant']  = $this->input->post('firstpartyPlain_defendant');
-					$data['CaseTitle']                  = $this->input->post('CaseTitle');
-					$data['CategoryofDispute']          = $this->input->post('CategoryofDispute');
-					$data['DateCommenced']              = $this->input->post('DateCommenced');
-					$data['EndDate']                    = $this->input->post('EndDate');
-					$data['FirstParty']                 = $this->input->post('FirstParty');
-					$data['FirstPartyEmail']            = $this->input->post('FirstPartyEmail');
-					$data['AddressOfFirstParty']        = $this->input->post('AddressOfFirstParty');
-					$data['FirstPArtyPhone']            = $this->input->post('FirstPArtyPhone');
-					$data['AttorneyName']               = $this->input->post('AttorneyNameFirst_party');
-					$data['AmountInDispute']            = $this->input->post('AmountInDisputeFirst_party');
-					$data['first_party_firm_name']      = $this->input->post('FirstParty_firm_name');
-					$data['AttorneyEmail']              = $this->input->post('FirstParty_attorney_email');
-					$data['AttorneyAddress']            = $this->input->post('FirstPartyAttorney_address');
-					$data['AttorneyPhone']              = $this->input->post('FirstPartyAttorney_phone');
-					$data['CaseType']                   = $this->input->post('FirstPartyCase_type');
-					$data['CaseDescription']            = $this->input->post('FirstPartyCase_desctiption');
+					$data['firstparty_represnt']        = strip_tags($this->input->post('firstparty_represnt'));
+					$data['firstpartyPlain_defendant']  = strip_tags($this->input->post('firstpartyPlain_defendant'));
+					$data['CaseTitle']                  = strip_tags($this->input->post('CaseTitle'));
+					$data['CategoryofDispute']          = strip_tags($this->input->post('CategoryofDispute'));
+					$data['DateCommenced']              = strip_tags($this->input->post('DateCommenced'));
+					$data['EndDate']                    = strip_tags($this->input->post('EndDate'));
+					$data['FirstParty']                 = strip_tags($this->input->post('FirstParty'));
+					$data['FirstPartyEmail']            = strip_tags($this->input->post('FirstPartyEmail'));
+					$data['AddressOfFirstParty']        = strip_tags($this->input->post('AddressOfFirstParty'));
+					$data['FirstPArtyPhone']            = strip_tags($this->input->post('FirstPArtyPhone'));
+					$data['AttorneyName']               = strip_tags($this->input->post('AttorneyNameFirst_party'));
+					$data['AmountInDispute']            = strip_tags($this->input->post('AmountInDisputeFirst_party'));
+					$data['first_party_firm_name']      = strip_tags($this->input->post('FirstParty_firm_name'));
+					$data['AttorneyEmail']              = strip_tags($this->input->post('FirstParty_attorney_email'));
+					$data['AttorneyAddress']            = strip_tags($this->input->post('FirstPartyAttorney_address'));
+					$data['AttorneyPhone']              = strip_tags($this->input->post('FirstPartyAttorney_phone'));
+					$data['CaseType']                   = strip_tags($this->input->post('FirstPartyCase_type'));
+					$data['CaseDescription']            = strip_tags($this->input->post('FirstPartyCase_desctiption'));
 					
 					//second party
-					$data['secondparty_represnt']       = $this->input->post('secondparty_represnt');
-					$data['secondpartyPlain_defendant'] = $this->input->post('secondpartyPlain_defendant');
-					$data['SecondParty']                = $this->input->post('SecondParty');
-					$data['AddressOfSecondParty']       = $this->input->post('AddressOfSecondParty');
-					$data['SocendPartyEmail']           = $this->input->post('SecondPartyEmail');
-					$data['SocendPArtyPhone']           = $this->input->post('SecondPartyPhone');
-					$data['second_party_attorney']      = $this->input->post('SecondPartyAttorneyName');
-					$data['second_party_firm_name']      = $this->input->post('SecondParty_firm_name');
-					$data['second_party_attorney_email'] = $this->input->post('SecondParty_attorney_email');
-					$data['second_party_attorney_address'] = $this->input->post('AddressOfSecondParty_attorney');
-					$data['second_party_attorney_phone'] = $this->input->post('SecondParty_attorney_phone');
+					$data['secondparty_represnt']       = strip_tags($this->input->post('secondparty_represnt'));
+					$data['secondpartyPlain_defendant'] = strip_tags($this->input->post('secondpartyPlain_defendant'));
+					$data['SecondParty']                = strip_tags($this->input->post('SecondParty'));
+					$data['AddressOfSecondParty']       = strip_tags($this->input->post('AddressOfSecondParty'));
+					$data['SocendPartyEmail']           = strip_tags($this->input->post('SecondPartyEmail'));
+					$data['SocendPArtyPhone']           = strip_tags($this->input->post('SecondPartyPhone'));
+					$data['second_party_attorney']      = strip_tags($this->input->post('SecondPartyAttorneyName'));
+					$data['second_party_firm_name']      = strip_tags($this->input->post('SecondParty_firm_name'));
+					$data['second_party_attorney_email'] = strip_tags($this->input->post('SecondParty_attorney_email'));
+					$data['second_party_attorney_address'] = strip_tags($this->input->post('AddressOfSecondParty_attorney'));
+					$data['second_party_attorney_phone'] = strip_tags($this->input->post('SecondParty_attorney_phone'));
 					$data['CaseStatus']                  = '1';
 					$data['UpdatedBy']                  = $UserID;
 					$data['UpdatedDate']                = $now;
@@ -249,37 +258,37 @@ class Cases extends CI_Controller {
 					$now = date('Y-m-d');
 					
 					//first party
-					$data['firstparty_represnt']        = $this->input->post('firstparty_represnt');
-					$data['firstpartyPlain_defendant']  = $this->input->post('firstpartyPlain_defendant');
-					$data['CaseTitle']                  = $this->input->post('CaseTitle');
-					$data['DateCommenced']              = $this->input->post('DateCommenced');
-					$data['CategoryofDispute']          = $this->input->post('CategoryofDispute');
+					$data['firstparty_represnt']        = strip_tags($this->input->post('firstparty_represnt'));
+					$data['firstpartyPlain_defendant']  = strip_tags($this->input->post('firstpartyPlain_defendant'));
+					$data['CaseTitle']                  = strip_tags($this->input->post('CaseTitle'));
+					$data['DateCommenced']              = strip_tags($this->input->post('DateCommenced'));
+					$data['CategoryofDispute']          = strip_tags($this->input->post('CategoryofDispute'));
 					//$data['EndDate']                    = $this->input->post('EndDate');
-					$data['FirstParty']                 = $this->input->post('FirstParty');
-					$data['FirstPartyEmail']            = $this->input->post('FirstPartyEmail');
-					$data['AddressOfFirstParty']        = $this->input->post('AddressOfFirstParty');
-					$data['FirstPArtyPhone']            = $this->input->post('FirstPArtyPhone');
-					$data['AttorneyName']               = $this->input->post('AttorneyNameFirst_party');
-					$data['AmountInDispute']            = $this->input->post('AmountInDisputeFirst_party');
-					$data['first_party_firm_name']      = $this->input->post('FirstParty_firm_name');
-					$data['AttorneyEmail']              = $this->input->post('FirstParty_attorney_email');
-					$data['AttorneyAddress']            = $this->input->post('FirstPartyAttorney_address');
-					$data['AttorneyPhone']              = $this->input->post('FirstPartyAttorney_phone');
-					$data['CaseType']                   = $this->input->post('FirstPartyCase_type');
-					$data['CaseDescription']            = $this->input->post('FirstPartyCase_desctiption');
+					$data['FirstParty']                 = strip_tags($this->input->post('FirstParty'));
+					$data['FirstPartyEmail']            = strip_tags($this->input->post('FirstPartyEmail'));
+					$data['AddressOfFirstParty']        = strip_tags($this->input->post('AddressOfFirstParty'));
+					$data['FirstPArtyPhone']            = strip_tags($this->input->post('FirstPArtyPhone'));
+					$data['AttorneyName']               = strip_tags($this->input->post('AttorneyNameFirst_party'));
+					$data['AmountInDispute']            = strip_tags($this->input->post('AmountInDisputeFirst_party'));
+					$data['first_party_firm_name']      = strip_tags($this->input->post('FirstParty_firm_name'));
+					$data['AttorneyEmail']              = strip_tags($this->input->post('FirstParty_attorney_email'));
+					$data['AttorneyAddress']            = strip_tags($this->input->post('FirstPartyAttorney_address'));
+					$data['AttorneyPhone']              = strip_tags($this->input->post('FirstPartyAttorney_phone'));
+					$data['CaseType']                   = strip_tags($this->input->post('FirstPartyCase_type'));
+					$data['CaseDescription']            = strip_tags($this->input->post('FirstPartyCase_desctiption'));
 					
 					//second party
-					$data['secondparty_represnt']       = $this->input->post('secondparty_represnt');
-					$data['secondpartyPlain_defendant'] = $this->input->post('secondpartyPlain_defendant');
-					$data['SecondParty']                = $this->input->post('SecondParty');
-					$data['AddressOfSecondParty']       = $this->input->post('AddressOfSecondParty');
-					$data['SocendPartyEmail']           = $this->input->post('SecondPartyEmail');
-					$data['SocendPArtyPhone']           = $this->input->post('SecondPartyPhone');
-					$data['second_party_attorney']      = $this->input->post('SecondPartyAttorneyName');
-					$data['second_party_firm_name']      = $this->input->post('SecondParty_firm_name');
-					$data['second_party_attorney_email'] = $this->input->post('SecondParty_attorney_email');
-					$data['second_party_attorney_address'] = $this->input->post('AddressOfSecondParty_attorney');
-					$data['second_party_attorney_phone'] = $this->input->post('SecondParty_attorney_phone');
+					$data['secondparty_represnt']       = strip_tags($this->input->post('secondparty_represnt'));
+					$data['secondpartyPlain_defendant'] = strip_tags($this->input->post('secondpartyPlain_defendant'));
+					$data['SecondParty']                = strip_tags($this->input->post('SecondParty'));
+					$data['AddressOfSecondParty']       = strip_tags($this->input->post('AddressOfSecondParty'));
+					$data['SocendPartyEmail']           = strip_tags($this->input->post('SecondPartyEmail'));
+					$data['SocendPArtyPhone']           = strip_tags($this->input->post('SecondPartyPhone'));
+					$data['second_party_attorney']      = strip_tags($this->input->post('SecondPartyAttorneyName'));
+					$data['second_party_firm_name']      = strip_tags($this->input->post('SecondParty_firm_name'));
+					$data['second_party_attorney_email'] = strip_tags($this->input->post('SecondParty_attorney_email'));
+					$data['second_party_attorney_address'] = strip_tags($this->input->post('AddressOfSecondParty_attorney'));
+					$data['second_party_attorney_phone'] = strip_tags($this->input->post('SecondParty_attorney_phone'));
 					$data['CaseStatus']                 = '1';
 					$data['CreatedBy']                  = $UserID;
 					$data['User_type']                  = $User_type;

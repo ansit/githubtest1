@@ -9,7 +9,15 @@ class Admin_dashboard extends CI_Controller {
 		if ( ! $this->session->userdata('logged_in'))
         { 
             redirect('login');
-        }
+        }else{
+			$session_data = $this->session->userdata('logged_in');
+			if($session_data['User_type']==2){
+				redirect('manager_dashboard/manager_user');
+			}elseif($session_data['User_type']==3){
+				redirect('user_dashboard');
+			}
+		}
+		
 		$this->load->library('imagic_resize');
 		$this->load->model('Dashboard_model');
 		$this->load->model('Notification_model');

@@ -6,7 +6,7 @@ class Admin_profile extends CI_Controller {
 	{
 		parent::__construct();
 		 
-		if ( ! $this->session->userdata('logged_in'))
+		if (! $this->session->userdata('logged_in'))
         { 
             redirect('login');
         }
@@ -35,16 +35,16 @@ class Admin_profile extends CI_Controller {
 		
 		      $this->load->library('form_validation');
 			  $this->form_validation->set_error_delimiters('<div class="error">','</div>');
-			  $this->form_validation->set_rules('FirstName','First Name','required|xss_clean');
-			  $this->form_validation->set_rules('LastName','Last Name','required|xss_clean');
+			  $this->form_validation->set_rules('FirstName','First Name','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('LastName','Last Name','required|xss_clean|strip_tags');
 			  //$this->form_validation->set_rules('Position','Position','required|xss_clean');
-			  $this->form_validation->set_rules('Address','Address','required|xss_clean');
-			  $this->form_validation->set_rules('City','City','required|xss_clean');
-			  $this->form_validation->set_rules('State','State','required|xss_clean');
+			  $this->form_validation->set_rules('Address','Address','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('City','City','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('State','State','required|xss_clean|strip_tags');
 			  $this->form_validation->set_rules('Zip','Zip','required|xss_clean|numeric|max_length[5]');
 			  if($this->input->post('email_id')=='' && $this->input->post('email_id')!= $this->input->post('Email'))
 			   {
-			     $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email');
+			     $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email|strip_tags');
 			   }
 			   elseif($this->input->post('email_id')!='' && $this->input->post('email_id')!= $this->input->post('Email'))
 			   {

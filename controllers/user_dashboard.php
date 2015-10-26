@@ -43,7 +43,15 @@ class User_dashboard extends CI_Controller {
 	public function active_case($id=''){ 
 		$data = array();
 		 $session_data =  $this->session->userdata('logged_in');
-		$data['casestepstat'] = $this->case_model->getcasestat($id,$session_data['UserID']);
+		 $this->case_model->allowaccess($id,$session_data['UserID']);
+		//$data['casestepstat'] = $this->case_model->getcasestat($id,$session_data['UserID']);
+		//$partyno = $data['casestepstat'][0]->partyno;
+		$partyno = $this->case_model->getpartybyuserid($id,$session_data['UserID']);
+		$data['casemodule'] = $this->case_model->getinputmodules($id,$partyno);
+		//echo $partyno."<br>";
+		//print_r($data['casemodule'] );
+		//exit;
+		//$data['userid']
 		$data['right_panel'] = $this->load->view('common/right_panel', '', true);
 		$data['common_header'] = $this->load->view('common/header', '', true);
 		$data['common_footer'] = $this->load->view('common/footer', '', true);
@@ -56,6 +64,7 @@ class User_dashboard extends CI_Controller {
 		$data = array();
 		 $session_data =  $this->session->userdata('logged_in');
 		$data['casestepstat'] = $this->case_model->getcasestat($id,$session_data['UserID']);
+		
 		$data['right_panel'] = $this->load->view('common/right_panel', '', true);
 		$data['common_header'] = $this->load->view('common/header', '', true);
 		$data['common_footer'] = $this->load->view('common/footer', '', true);
@@ -65,7 +74,7 @@ class User_dashboard extends CI_Controller {
 	}
 	
 	
-	public function responseuser($caseid=""){
+	public function responseuser($caseid="",$moduleid=""){
 		$sessdata = $this->session->userdata('logged_in');
 		$userid = $sessdata['UserID'];
 		$data['getpartyno'] = $this->case_model->hiddenpartyno($caseid,$userid);
@@ -80,10 +89,11 @@ class User_dashboard extends CI_Controller {
 		}else{
 			$data['caseid'] = $caseid;
 			//$data['filledans'] = $this->case_model->getansbycaseid($caseid);
-			$data['filledans'] = $this->case_model->getfileans($caseid,$userid);
-			$data['getques'] = $this->case_model->getquesbycaseid($caseid);
-			//print_r($data['getques']);
-			//exit;
+			
+			//$data['getques'] = $this->case_model->getquesbycaseid($caseid);
+			$data['getques'] = $this->case_model->getquesbymoduleid($moduleid);
+			//$data['filledans'] = $this->case_model->getfileans($caseid,$userid);
+			$data['filledans'] = $this->case_model->getansbyidquest($caseid,$userid,$data['getques']);
 			$data['right_panel'] = $this->load->view('common/right_panel', '', true);
 			$data['common_header'] = $this->load->view('common/header', '', true);
 			$data['common_footer'] = $this->load->view('common/footer', '', true);

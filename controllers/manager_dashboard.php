@@ -12,6 +12,7 @@ class Manager_dashboard extends CI_Controller {
         }
 		$this->load->library('imagic_resize');
 		$this->load->library('email');
+		$this->load->model('user_model');
 		$this->load->model('Dashboard_model');	
 		$this->load->model('manager_model');	
 		$this->load->model('case_model');
@@ -91,7 +92,7 @@ class Manager_dashboard extends CI_Controller {
 		}
 		// view case
 		public function view_case($id=''){
-			
+			$this->user_model->adminmana();
 			if($id){
 				$data = array();
 				$chsta['case_stat'] = $this->case_model->allcasestat();
@@ -100,6 +101,10 @@ class Manager_dashboard extends CI_Controller {
 				$data['common_header'] = $this->load->view('common/header', '', true);
 				$data['common_footer'] = $this->load->view('common/footer', $chsta, true);
 				$data['caseItem']=$this->case_model->get_case($id);
+				
+				$data['casemodule'] = $this->case_model->getinputmodules($id);
+				//print_r($data['casemodule']);
+				//exit;
 				$data['firparcom'] = $this->case_model->getmanagercomment($id,1);
 				$data['secparcom'] = $this->case_model->getmanagercomment($id,2);
 				$data['firstep1'] = $this->case_model->stepdata($id,1,1);
@@ -113,23 +118,24 @@ class Manager_dashboard extends CI_Controller {
 		
 		}
 		
-	public function viewcasedetails($caseid,$partyno,$stepno){
+	public function viewcasedetails($caseid,$moduleid,$partyno){
+		$this->user_model->adminmana();
+		$userid = $this->case_model->getuserbyparty($caseid,$partyno);
+		//print_r($userid);
+		//exit;
 		$data['right_panel'] = $this->load->view('common/right_panel', '', true);
 		$data['common_header'] = $this->load->view('common/header', '', true);
 		$data['common_footer'] = $this->load->view('common/footer', '', true);
 		$data['caseItem']=$this->case_model->get_case($caseid);
 		$data['partyno'] = $partyno;
-		$data['stepno'] = $stepno;
-		if($stepno == 2){
-			$data['questions'] = $this->case_model->getquesbycaseid($caseid);
-			//$data['filledans'] = $this->case_model->getansbycaseid($caseid);
-			$userid = $this->case_model->getuserbyparty($caseid,$partyno);
-			$data['filledans'] = $this->case_model->getfileans($caseid,$userid);
-			//print_r($data['questions']);
-			//exit;
-			//
-		}
-		$data['manacomment'] = $this->case_model->getmanagercomment($caseid,$partyno);
+		$data['stepno'] = $moduleid;
+		//if($stepno == 2){
+			//$data['questions'] = $this->case_model->getquesbycaseid($caseid);
+			$data['questions'] = $this->case_model->getquesbymoduleid($moduleid);
+			$data['filledans'] = $this->case_model->getansbyidquest($caseid,$userid,$data['questions']);
+		//}
+		//$data['manacomment'] = $this->case_model->getmanagercomment($caseid,$partyno);
+		$data['manacomment'] = $this->case_model->getmancom($caseid,$moduleid);
 		$this->load->view('viewcasedetails.php',$data);
 	}
 	

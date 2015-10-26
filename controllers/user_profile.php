@@ -28,76 +28,7 @@ class User_profile extends CI_Controller {
 		
 		
 	}
-	/*
-    function update_profile($id='')
-	{
-	  if(isset($_POST['administrator_update']))
-	  {
-		if ($_FILES['profile_img']['name']!='')
-		{
-		  $dirPath = FILE_ROOT_PATH.'/media/profile_img/admin/'.$this->input->post('old_profile_img');
-		if($this->input->post('old_profile_img')!='')
-		{
-		   unlink(realpath($dirPath));
-		}
-		$config['upload_path'] = FILE_ROOT_PATH.'\media\profile_img\admin';
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['max_size']    = '1024';
-		$config['max_width']  = '1024';
-		$config['max_height']  = '768';
-		$this->load->library('upload', $config);
-				          
-				
-			 if ( ! $this->upload->do_upload($field='profile_img'))
-			 {
-			   $error = array('error' => $this->upload->display_errors());
-			   $this->session->set_flashdata('msg', $error['error']);
-			    redirect('user_profile');
-				
-			 }
-			 else
-			 {
-			    $data = $this->upload->data();
-				//$this->thumb($data);
-			    $image_name = $data['file_name'];
-			 }
-	       }
-			else
-			{
-				$image_name= $this->input->post('old_profile_img');
-			}
-		    
-			$now = date('Y-m-d');
-			$data = array(
-			'FirstName' => $this->input->post('FirstName'),
-			'LastName' => $this->input->post('LastName'),
-			'Position' => $this->input->post('Position'),
-			'Address' => $this->input->post('Address'),
-			'City' => $this->input->post('City'),
-			'State' => $this->input->post('State'),
-			'Zip' => $this->input->post('Zip'),
-			'Email' => $this->input->post('Email'),
-			'Password' => $this->input->post('Password'),
-			'PhoneNumber' => $this->input->post('PhoneNumber'),
-			'Firm_CompanySize' => $this->input->post('Firm_CompanySize'),
-			'HowDidYouHearAboutUs' => $this->input->post('HowDidYouHearAboutUs'),
-			'ProfilePic' => $image_name,
-			'UpdatedDate' => $now,
-			'Country' => $this->input->post('Country'));
-			$rss = $this->user_model->update_administrator_data($id,$data);
-		if($rss)
-		{	
-		  $message = 'Successful Update';
-		  $this->session->set_flashdata('msg', $message);
-		  redirect('user_profile');
-		}
-	   }	
-		
-		
-		
-		
-	}*/
-		
+	
 	 
 		
 	  public function update_profile($id)
@@ -144,33 +75,33 @@ class User_profile extends CI_Controller {
 				$inserted_id ='';
 				$user_info = array();
 				$session_data = array();
-				$user_info['FirstName']               = $this->input->post('FirstName');
-				$user_info['LastName']                = $this->input->post('LastName');
+				$user_info['FirstName']               = strip_tags($this->input->post('FirstName'));
+				$user_info['LastName']                = strip_tags($this->input->post('LastName'));
 				if($this->input->post('Position')=='')
 				{
 					$user_info['Position']                = 'individual';
 				}
 				else
 				{
-				   $user_info['Position']                = $this->input->post('Position');
+				   $user_info['Position']                = strip_tags($this->input->post('Position'));
 				}
-				$user_info['Address']                 = $this->input->post('Address');
-				$user_info['City']                    = $this->input->post('City');
-				$user_info['State']                   = $this->input->post('State');
-				$user_info['Zip']                     = $this->input->post('Zip');
+				$user_info['Address']                 = strip_tags($this->input->post('Address'));
+				$user_info['City']                    = strip_tags($this->input->post('City'));
+				$user_info['State']                   = strip_tags($this->input->post('State'));
+				$user_info['Zip']                     = strip_tags($this->input->post('Zip'));
 				$user_info['Email']                   = $this->input->post('Email');
 				$user_info['Password']                = $this->input->post('Password');
-				$user_info['PhoneNumber']             = $this->input->post('PhoneNumber');
-				$user_info['Firm_CompanySize']        = $this->input->post('Firm_CompanySize');
-				$user_info['HowDidYouHearAboutUs']    = $this->input->post('HowDidYouHearAboutUs');
+				$user_info['PhoneNumber']             = strip_tags($this->input->post('PhoneNumber'));
+				$user_info['Firm_CompanySize']        = strip_tags($this->input->post('Firm_CompanySize'));
+				$user_info['HowDidYouHearAboutUs']    = strip_tags($this->input->post('HowDidYouHearAboutUs'));
 				$user_info['UpdatedBy']               = $uid;
 				$this->register_model->edit_user($user_info,$id);
 				
 				if($this->input->post('Position')=='company' && $this->input->post('old_postion')=='company' )
 				{
-					$company_info['CompanyName']                = $this->input->post('CompanyName');
-					$company_info['CompanySize']                = $this->input->post('CompanySize');
-					$company_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$company_info['CompanyName']                = strip_tags($this->input->post('CompanyName'));
+					$company_info['CompanySize']                = strip_tags($this->input->post('CompanySize'));
+					$company_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_company'))
 					{
 					 $company_info['other_ind_type'] = $this->input->post('otherval_company');             
@@ -192,9 +123,9 @@ class User_profile extends CI_Controller {
 					$this->register_model->delet_user_law_firm($id);
 					//
 					$company_info['UserID']                     = $id;
-					$company_info['CompanyName']                = $this->input->post('CompanyName');
-					$company_info['CompanySize']                = $this->input->post('CompanySize');
-					$company_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$company_info['CompanyName']                = strip_tags($this->input->post('CompanyName'));
+					$company_info['CompanySize']                = strip_tags($this->input->post('CompanySize'));
+					$company_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_company'))
 					{
 					 $company_info['other_ind_type'] = $this->input->post('otherval_company');             
@@ -219,9 +150,9 @@ class User_profile extends CI_Controller {
 					//
 					
 					$lawfirm_info['UserID']                     = $id;
-					$lawfirm_info['FirmName']                   = $this->input->post('FirmName');
-					$lawfirm_info['FirmSize']                   = $this->input->post('FirmSize');
-					$lawfirm_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorneylaw');
+					$lawfirm_info['FirmName']                   = strip_tags($this->input->post('FirmName'));
+					$lawfirm_info['FirmSize']                   = strip_tags($this->input->post('FirmSize'));
+					$lawfirm_info['AreYouAnAttorney']           =strip_tags( $this->input->post('AreYouAnAttorneylaw'));
 					if($this->input->post('otherval_law'))
 					{
 					 $lawfirm_info['other_practiceArea'] = $this->input->post('otherval_law');             
@@ -242,9 +173,9 @@ class User_profile extends CI_Controller {
 				
 				if($this->input->post('Position')=='law_firm' && $this->input->post('old_postion')=='law_firm' )
 				{
-					$lawfirm_info['FirmName']                   = $this->input->post('FirmName');
-					$lawfirm_info['FirmSize']                   = $this->input->post('FirmSize');
-					$lawfirm_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorneylaw');
+					$lawfirm_info['FirmName']                   = strip_tags($this->input->post('FirmName'));
+					$lawfirm_info['FirmSize']                   = strip_tags($this->input->post('FirmSize'));
+					$lawfirm_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorneylaw'));
 					if($this->input->post('otherval_law'))
 					{
 					 $lawfirm_info['other_practiceArea'] = $this->input->post('otherval_law');             
@@ -275,9 +206,9 @@ class User_profile extends CI_Controller {
 				{
 					
 					$company_info['UserID']                     = $id;
-					$company_info['CompanyName']                = $this->input->post('CompanyName');
-					$company_info['CompanySize']                = $this->input->post('CompanySize');
-					$company_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$company_info['CompanyName']                = strip_tags($this->input->post('CompanyName'));
+					$company_info['CompanySize']                = strip_tags($this->input->post('CompanySize'));
+					$company_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_company'))
 					{
 					 $company_info['other_ind_type'] = $this->input->post('otherval_company');             
@@ -299,8 +230,8 @@ class User_profile extends CI_Controller {
 				{
 					
 					$lawfirm_info['UserID']                     = $id;
-					$lawfirm_info['FirmName']                   = $this->input->post('FirmName');
-					$lawfirm_info['FirmSize']                   = $this->input->post('FirmSize');
+					$lawfirm_info['FirmName']                   = strip_tags($this->input->post('FirmName'));
+					$lawfirm_info['FirmSize']                   = strip_tags($this->input->post('FirmSize'));
 					$lawfirm_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorneylaw');
 					if($this->input->post('otherval_law'))
 					{

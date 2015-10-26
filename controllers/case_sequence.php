@@ -12,6 +12,8 @@ class Case_sequence extends CI_Controller {
         }
 		$this->load->library('imagic_resize');
 		$this->load->model('case_model');
+		$this->load->model('user_model');
+		$this->user_model->roleaccess();
 		//error_reporting(0);
 
     }
@@ -36,7 +38,7 @@ class Case_sequence extends CI_Controller {
 			$data = array();
 			$now = date('Y-m-d h:i:s');
 			$session_data = $this->session->userdata('logged_in');
-			$data['SequenceName'] = $this->input->post('case_sequence_name'); 
+			$data['SequenceName'] = strip_tags($this->input->post('case_sequence_name')); 
 			$data['CreatedBy'] = $session_data['UserID'];
 			$data['CreatedDate'] = $now; 
 			$data['UpdatedDate'] = $now; 
@@ -138,11 +140,23 @@ class Case_sequence extends CI_Controller {
 
 	}
 	
+	public function checkmodulename(){
+		if($this->input->is_ajax_request()){
+			echo $this->case_model->checkmoduleexistance();
+			
+		}else{
+			echo "direct browser access is not allowed!";
+		}
+		
+	}
+	
 	
 	public function information_module(){
 		$data['right_panel'] = $this->load->view('common/right_panel', '', true);
 		$data['common_header'] = $this->load->view('common/header', '', true);
 		$data['common_footer'] = $this->load->view('common/footer', '', true);
+		$data['case_sequence_list'] = $this->case_model->get_case_sequence_list();
+		$data['input_module_list'] = $this->case_model->get_input_module();
 		$this->load->view('information_module',$data);
 	}
 	public function search ($q){
@@ -197,6 +211,24 @@ class Case_sequence extends CI_Controller {
 			}
 		 }
 
+		 // To Delete case model in dynamic form
+	// Randheer kumar
+	
+	public function delete_Case_Module()
+	{
+			$uid = $this->input->post('Case_Sequence_ID');
+		$res = $this->case_model->delete_case_module($uid);
+		//echo $this->db->last_query();
+		
+		if($this->db->affected_rows()>0)
+		{
+			echo 1;
+		}
+		else{
+			echo 0;
+		}
+		
+	}	
 	public function getquesansbycaseseq($id){
 		//echo "this is id ".$id;
 		$casequesans = $this->case_model->casequesans($id);
@@ -207,6 +239,28 @@ class Case_sequence extends CI_Controller {
 		//$query = $this->db->get_where('caseanswer',array('IDQuest'=>$id));
 		$query = $this->db->query("SELECT caseanswer.ansid,caseanswer.caseid,caseanswer.IDQuest,caseanswer.t_a,caseanswer.iDAlternativa,caseanswer.optionlist,caseanswer.anstxt,file_upload.f_name FROM `caseanswer` LEFT JOIN file_upload ON caseanswer.anstxt = file_upload.refrenceid  WHERE caseanswer.IDQuest = '$id'");
 		echo json_encode($query->result());
+	}
+	
+	public function addques(){
+		$moduleid = $this->input->post('moduleid');
+		//print_r($this->input->post());
+		//exit;
+		$this->case_model->addsingleques($moduleid);
+	}
+	
+	public function fillmodlist(){
+		if($this->input->is_ajax_request()){
+			$modlist = $this->case_model->getmodlist();
+			echo $modlist;
+		}
+		
+	}
+	
+	public function processinfomod(){
+		if($this->input->is_ajax_request()){
+			$infomoduledata = $this->case_model->processinfomod();
+			echo $infomoduledata;
+		}
 	}
 	
 }

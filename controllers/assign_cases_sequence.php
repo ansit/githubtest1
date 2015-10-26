@@ -10,7 +10,9 @@ class Assign_cases_sequence extends CI_Controller {
         { 
             redirect('login');
         }
-		$this->load->model('assign_model');	
+		$this->load->model('assign_model');
+		$this->load->model('user_model');
+		$this->user_model->roleaccess();
 		error_reporting(0);
      }
 

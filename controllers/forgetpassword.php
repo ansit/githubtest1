@@ -53,7 +53,7 @@ class Forgetpassword extends CI_Controller {
 			   return $string;
 			}
 			
-			  $userEmail = $this->input->post('email');
+			  $userEmail = strip_tags($this->input->post('email'));
 			  $activation_id=  genrateActivation_code();
 
 			  $result = $this->user_model->insertActivationcode($userEmail,$activation_id);
@@ -87,7 +87,7 @@ class Forgetpassword extends CI_Controller {
 	
 	function check_existance()
 	{
-		$userEmail = $this->input->post('email');
+		$userEmail = strip_tags($this->input->post('email'));
 		$result = $this->user_model->checkExistance($userEmail);
 		$userid= $result;
 		
@@ -113,34 +113,4 @@ class Forgetpassword extends CI_Controller {
  }
 
 
-		//
-		//$mail             = new CI_Phpmailer();
-		//
-		//$mail->IsSMTP(); // telling the class to use SMTP
-		//$mail->Host       = "mail.gmail.com"; // SMTP server
-		//$mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
-		//
-		//$body = "Code Ignitor test";										   // 1 = errors and messages
-		//										                  // 2 = messages only
-		//$mail->SMTPAuth   = true;                                 // enable SMTP authentication
-		//$mail->SMTPSecure = "ssl";                              // sets the prefix to the servier
-		//$mail->Host       = "smtp.gmail.com";                   // sets GMAIL as the SMTP server
-		//$mail->Port       =  465;                              // set the SMTP port for the GMAIL server
-		//$mail->Username   = "avni.kumar1987@gmail.com";       // GMAIL username
-		//$mail->Password   = "Avnish@singh@3547";              // GMAIL password
-		//
-		//$mail->SetFrom('test4ansit@yourdomain.com', 'Casemanagement App');
-		//
-		//$mail->AddReplyTo("test4ansit@yourdomain.com","Casemanagement app");
-		//
-		//$mail->Subject    = "Casemanagementapp New Password";
-		//
-		//$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
-		//
-		//$mail->MsgHTML($body);
-		//
-		//$address = "avni.kumar1987@gmail.com";
-		//$mail->AddAddress($address, "John Doe");
-		//
-		//
 ?>

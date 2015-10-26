@@ -21,6 +21,7 @@ class User extends CI_Controller {
 
 	public function index()
 	{
+		$this->user_model->roleaccess();
 		$data = array();	
 		$user_list = $this->user_model->get_user_list();
 		$data['user_list'] = $user_list;
@@ -32,6 +33,7 @@ class User extends CI_Controller {
 	
 		 public function addUser($caseid="",$party="")
 		 {
+			$this->user_model->roleaccess();
 			if($caseid =="" && $party == ""){
 					$data = array();
 					$user_data['FirstName']               = '';
@@ -109,12 +111,12 @@ class User extends CI_Controller {
 		{
 			  $this->load->library('form_validation');
 			  $this->form_validation->set_error_delimiters('<div class="error">','</div>');
-			  $this->form_validation->set_rules('FirstName','First Name','required|xss_clean');
-			  $this->form_validation->set_rules('LastName','Last Name','required|xss_clean');
-			  $this->form_validation->set_rules('Position','Position','required|xss_clean');
-			  $this->form_validation->set_rules('Address','Address','required|xss_clean');
-			  $this->form_validation->set_rules('City','City','required|xss_clean');
-			  $this->form_validation->set_rules('State','State','required|xss_clean');
+			  $this->form_validation->set_rules('FirstName','First Name','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('LastName','Last Name','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('Position','Position','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('Address','Address','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('City','City','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('State','State','required|xss_clean|strip_tags');
 			  $this->form_validation->set_rules('Zip','Zip','required|xss_clean|max_length[5]');
 			  $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email');
 			  $this->form_validation->set_rules('Password','Password','required|xss_clean');
@@ -135,13 +137,13 @@ class User extends CI_Controller {
 				$user_data['Password']                = $this->input->post('Password');
 				$user_data['PhoneNumber']             = $this->input->post('PhoneNumber');
 				$user_data['Firm_CompanySize']        = $this->input->post('Firm_CompanySize');
-				$user_data['HowDidYouHearAboutUs']    = $this->input->post('HowDidYouHearAboutUs');
-				$user_data['CompanyName']             = $this->input->post('CompanyName');
-				$user_data['CompanySize']             = $this->input->post('CompanySize');
-				$user_data['AreYouAnAttorney']        = $this->input->post('AreYouAnAttorney');
-				$user_data['FirmName']                = $this->input->post('FirmName');
-				$user_data['FirmSize']                = $this->input->post('FirmSize');
-				$user_data['AreYouAnAttorney']        = $this->input->post('AreYouAnAttorney');
+				$user_data['HowDidYouHearAboutUs']    = strip_tags($this->input->post('HowDidYouHearAboutUs'));
+				$user_data['CompanyName']             = strip_tags($this->input->post('CompanyName'));
+				$user_data['CompanySize']             = strip_tags($this->input->post('CompanySize'));
+				$user_data['AreYouAnAttorney']        = strip_tags($this->input->post('AreYouAnAttorney'));
+				$user_data['FirmName']                = strip_tags($this->input->post('FirmName'));
+				$user_data['FirmSize']                = strip_tags($this->input->post('FirmSize'));
+				$user_data['AreYouAnAttorney']        = strip_tags($this->input->post('AreYouAnAttorney'));
 				$data['user_data'] = $user_data;
 				$data['title'] = 'Add User';
 				$data['heading'] = 'Add User';
@@ -161,8 +163,8 @@ class User extends CI_Controller {
 				$inserted_id ='';
 				$user_info = array();
 				$session_data = array();
-				$user_info['FirstName']               = $this->input->post('FirstName');
-				$user_info['LastName']                = $this->input->post('LastName');
+				$user_info['FirstName']               = strip_tags($this->input->post('FirstName'));
+				$user_info['LastName']                = strip_tags($this->input->post('LastName'));
 				if($this->input->post('Position')=='')
 				{
 					$user_info['Position']                = 'individual';
@@ -171,15 +173,15 @@ class User extends CI_Controller {
 				{
 				   $user_info['Position']                = $this->input->post('Position');
 				}
-				$user_info['Address']                 = $this->input->post('Address');
-				$user_info['City']                    = $this->input->post('City');
-				$user_info['State']                   = $this->input->post('State');
-				$user_info['Zip']                     = $this->input->post('Zip');
+				$user_info['Address']                 = strip_tags($this->input->post('Address'));
+				$user_info['City']                    = strip_tags($this->input->post('City'));
+				$user_info['State']                   = strip_tags($this->input->post('State'));
+				$user_info['Zip']                     = strip_tags($this->input->post('Zip'));
 				$user_info['Email']                   = $this->input->post('Email');
 				$user_info['Password']                = $this->input->post('Password');
 				$user_info['PhoneNumber']             = $this->input->post('PhoneNumber');
-				$user_info['Firm_CompanySize']        = $this->input->post('Firm_CompanySize');
-				$user_info['HowDidYouHearAboutUs']    = $this->input->post('HowDidYouHearAboutUs');
+				$user_info['Firm_CompanySize']        = strip_tags($this->input->post('Firm_CompanySize'));
+				$user_info['HowDidYouHearAboutUs']    = strip_tags($this->input->post('HowDidYouHearAboutUs'));
 				$user_info['User_type']               = '3';
 				$user_info['IsActive']                = '1';
 				$user_info['UserJoinedDate']          = $now;
@@ -190,12 +192,12 @@ class User extends CI_Controller {
 				if($this->input->post('Position')=='company')
 				{
 					$company_info['UserID']                     = $inserted_id;
-					$company_info['CompanyName']                = $this->input->post('CompanyName');
-					$company_info['CompanySize']                = $this->input->post('CompanySize');
-					$company_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$company_info['CompanyName']                = strip_tags($this->input->post('CompanyName'));
+					$company_info['CompanySize']                = strip_tags($this->input->post('CompanySize'));
+					$company_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_company'))
 					{
-					 $company_info['other_ind_type'] = $this->input->post('otherval_company');             
+					 $company_info['other_ind_type'] = strip_tags($this->input->post('otherval_company'));             
 					}
 					if($this->input->post('terms2'))
 					{
@@ -210,9 +212,9 @@ class User extends CI_Controller {
 				if($this->input->post('Position')=='law_firm')
 				{
 					$lawfirm_info['UserID']                     = $inserted_id;
-					$lawfirm_info['FirmName']                   = $this->input->post('FirmName');
-					$lawfirm_info['FirmSize']                   = $this->input->post('FirmSize');
-					$lawfirm_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$lawfirm_info['FirmName']                   = strip_tags($this->input->post('FirmName'));
+					$lawfirm_info['FirmSize']                   = strip_tags($this->input->post('FirmSize'));
+					$lawfirm_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_law'))
 					{
 					 $lawfirm_info['other_practiceArea'] = $this->input->post('otherval_law');             
@@ -309,33 +311,33 @@ class User extends CI_Controller {
 				$inserted_id ='';
 				$user_info = array();
 				$session_data = array();
-				$user_info['FirstName']               = $this->input->post('FirstName');
-				$user_info['LastName']                = $this->input->post('LastName');
+				$user_info['FirstName']               = strip_tags($this->input->post('FirstName'));
+				$user_info['LastName']                = strip_tags($this->input->post('LastName'));
 				if($this->input->post('Position')=='')
 				{
 					$user_info['Position']                = 'individual';
 				}
 				else
 				{
-				   $user_info['Position']                = $this->input->post('Position');
+				   $user_info['Position']                = strip_tags($this->input->post('Position'));
 				}
-				$user_info['Address']                 = $this->input->post('Address');
-				$user_info['City']                    = $this->input->post('City');
-				$user_info['State']                   = $this->input->post('State');
-				$user_info['Zip']                     = $this->input->post('Zip');
+				$user_info['Address']                 = strip_tags($this->input->post('Address'));
+				$user_info['City']                    = strip_tags($this->input->post('City'));
+				$user_info['State']                   = strip_tags($this->input->post('State'));
+				$user_info['Zip']                     = strip_tags($this->input->post('Zip'));
 				$user_info['Email']                   = $this->input->post('Email');
 				$user_info['Password']                = $this->input->post('Password');
 				$user_info['PhoneNumber']             = $this->input->post('PhoneNumber');
-				$user_info['Firm_CompanySize']        = $this->input->post('Firm_CompanySize');
-				$user_info['HowDidYouHearAboutUs']    = $this->input->post('HowDidYouHearAboutUs');
+				$user_info['Firm_CompanySize']        = strip_tags($this->input->post('Firm_CompanySize'));
+				$user_info['HowDidYouHearAboutUs']    = strip_tags($this->input->post('HowDidYouHearAboutUs'));
 				$user_info['UpdatedBy']               = $uid;
 				$this->register_model->edit_user($user_info,$id);
 				
 				if($this->input->post('Position')=='company' && $this->input->post('old_postion')=='company' )
 				{
-					$company_info['CompanyName']                = $this->input->post('CompanyName');
-					$company_info['CompanySize']                = $this->input->post('CompanySize');
-					$company_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorneycom');
+					$company_info['CompanyName']                = strip_tags($this->input->post('CompanyName'));
+					$company_info['CompanySize']                = strip_tags($this->input->post('CompanySize'));
+					$company_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorneycom'));
 					if($this->input->post('otherval_company'))
 					{
 					 $company_info['other_ind_type'] = $this->input->post('otherval_company');             
@@ -357,9 +359,9 @@ class User extends CI_Controller {
 					$this->register_model->delet_user_law_firm($id);
 					//
 					$company_info['UserID']                     = $id;
-					$company_info['CompanyName']                = $this->input->post('CompanyName');
-					$company_info['CompanySize']                = $this->input->post('CompanySize');
-					$company_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorneycom');
+					$company_info['CompanyName']                = strip_tags($this->input->post('CompanyName'));
+					$company_info['CompanySize']                = strip_tags($this->input->post('CompanySize'));
+					$company_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorneycom'));
 					if($this->input->post('otherval_company'))
 					{
 					 $company_info['other_ind_type'] = $this->input->post('otherval_company');             
@@ -384,9 +386,9 @@ class User extends CI_Controller {
 					//
 					
 					$lawfirm_info['UserID']                     = $id;
-					$lawfirm_info['FirmName']                   = $this->input->post('FirmName');
-					$lawfirm_info['FirmSize']                   = $this->input->post('FirmSize');
-					$lawfirm_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$lawfirm_info['FirmName']                   = strip_tags($this->input->post('FirmName'));
+					$lawfirm_info['FirmSize']                   = strip_tags($this->input->post('FirmSize'));
+					$lawfirm_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_law'))
 					{
 					 $lawfirm_info['other_practiceArea'] = $this->input->post('otherval_law');             
@@ -407,9 +409,9 @@ class User extends CI_Controller {
 				
 				if($this->input->post('Position')=='law_firm' && $this->input->post('old_postion')=='law_firm' )
 				{
-					$lawfirm_info['FirmName']                   = $this->input->post('FirmName');
-					$lawfirm_info['FirmSize']                   = $this->input->post('FirmSize');
-					$lawfirm_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$lawfirm_info['FirmName']                   = strip_tags($this->input->post('FirmName'));
+					$lawfirm_info['FirmSize']                   = strip_tags($this->input->post('FirmSize'));
+					$lawfirm_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_law'))
 					{
 					 $lawfirm_info['other_practiceArea'] = $this->input->post('otherval_law');             
@@ -440,9 +442,9 @@ class User extends CI_Controller {
 				{
 					
 					$company_info['UserID']                     = $id;
-					$company_info['CompanyName']                = $this->input->post('CompanyName');
-					$company_info['CompanySize']                = $this->input->post('CompanySize');
-					$company_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorneycom');
+					$company_info['CompanyName']                = strip_tags($this->input->post('CompanyName'));
+					$company_info['CompanySize']                = strip_tags($this->input->post('CompanySize'));
+					$company_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorneycom'));
 					if($this->input->post('otherval_company'))
 					{
 					 $company_info['other_ind_type'] = $this->input->post('otherval_company');             
@@ -464,9 +466,9 @@ class User extends CI_Controller {
 				{
 					
 					$lawfirm_info['UserID']                     = $id;
-					$lawfirm_info['FirmName']                   = $this->input->post('FirmName');
-					$lawfirm_info['FirmSize']                   = $this->input->post('FirmSize');
-					$lawfirm_info['AreYouAnAttorney']           = $this->input->post('AreYouAnAttorney');
+					$lawfirm_info['FirmName']                   = strip_tags($this->input->post('FirmName'));
+					$lawfirm_info['FirmSize']                   = strip_tags($this->input->post('FirmSize'));
+					$lawfirm_info['AreYouAnAttorney']           = strip_tags($this->input->post('AreYouAnAttorney'));
 					if($this->input->post('otherval_law'))
 					{
 					 $lawfirm_info['other_practiceArea'] = $this->input->post('otherval_law');             

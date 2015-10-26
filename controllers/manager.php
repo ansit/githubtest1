@@ -21,6 +21,7 @@ class Manager extends CI_Controller {
 
 	public function index()
 	{
+		$this->user_model->roleaccess();
 		$data = array();	
 		$manager_list = $this->manager_model->get_manager_list();
 		$data['manager_list'] = $manager_list;
@@ -34,6 +35,7 @@ class Manager extends CI_Controller {
 	//Added by avnish 25/07/15
 	public function manager_cases()
 	{
+		$this->user_model->roleaccess();
 		$data = array();	
 		$manager_list = $this->manager_model->get_manager_list();
 		$data['manager_list'] = $manager_list;
@@ -121,19 +123,19 @@ class Manager extends CI_Controller {
 			 
 			  $this->load->library('form_validation');
 			  $this->form_validation->set_error_delimiters('<div class="error">','</div>');
-			  $this->form_validation->set_rules('Name','First Name','required|xss_clean');
-			  $this->form_validation->set_rules('Address','Address','required|xss_clean');
+			  $this->form_validation->set_rules('Name','First Name','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('Address','Address','required|xss_clean|strip_tags');
 			  $this->form_validation->set_rules('Phone','Phone Number','required|xss_clean|numeric|max_length[10]');
 			   if($this->input->post('email_id')=='' && $this->input->post('email_id')!= $this->input->post('Email'))
 			   {
-			     $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email');
+			     $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email|strip_tags');
 			   }
 			   elseif($this->input->post('email_id')!='' && $this->input->post('email_id')!= $this->input->post('Email'))
 			   {
 			      $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email');
 			   }
-			  $this->form_validation->set_rules('Biography','Biography','required|xss_clean');
-			  $this->form_validation->set_rules('Areasofexpertise','Areas of expertise','required|xss_clean');
+			  $this->form_validation->set_rules('Biography','Biography','required|xss_clean|strip_tags');
+			  $this->form_validation->set_rules('Areasofexpertise','Areas of expertise','required|xss_clean|strip_tags');
 			  $this->form_validation->set_rules('Passsword','Password','required|xss_clean');
 			  if(!empty($_FILES['profile_img']['name'])){
 				$this->form_validation->set_rules('profile_img','profile_img','callback_checkdp');
@@ -171,13 +173,13 @@ class Manager extends CI_Controller {
 				if ($this->session->userdata('logged_in')){
 					$session_data = $this->session->userdata('logged_in');
 				}
-				$manager_info['FirstName']               = $this->input->post('Name');
-				$manager_info['Email']                   = $this->input->post('Email');
-				$manager_info['Address']                 = $this->input->post('Address');
-				$manager_info['PhoneNumber']             = $this->input->post('Phone');
+				$manager_info['FirstName']               = strip_tags($this->input->post('Name'));
+				$manager_info['Email']                   = strip_tags($this->input->post('Email'));
+				$manager_info['Address']                 = strip_tags($this->input->post('Address'));
+				$manager_info['PhoneNumber']             = strip_tags($this->input->post('Phone'));
 				$manager_info['Password']                = $this->input->post('Passsword');
-			    $manager_info['biography']               = $this->input->post('Biography');
-				$manager_info['areasofexpertise']        = $this->input->post('Areasofexpertise');
+			    $manager_info['biography']               = strip_tags($this->input->post('Biography'));
+				$manager_info['areasofexpertise']        = strip_tags($this->input->post('Areasofexpertise'));
 				//$manager_info['upload_cv']               = $upload_cv;
 				$manager_info['User_type']               = '2';
 				$manager_info['UserJoinedDate']          = $now;   
@@ -238,142 +240,7 @@ class Manager extends CI_Controller {
 			
 	     
         }
-         
-
-		 
-	//	  public function add_edit_Manager($id='')
-	//	 {
-	//		if(isset($_POST['btnmanager']))
-	//		{
-	//		     $config['upload_path'] = FILE_ROOT_PATH.'\media\profile_img\manager';
-	//			 $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|swf|pdf|doc|docx|xml|txt';
-	//			 $config['max_size']    = '1024';
-	//			 $config['max_width']  = '1024';
-	//			 $config['max_height']  = '768';
-	//			 $this->load->library('upload', $config);
-	//		 
-	//		  $this->load->library('form_validation');
-	//		  $this->form_validation->set_error_delimiters('<div class="error">','</div>');
-	//		  $this->form_validation->set_rules('Name','First Name','required|xss_clean');
-	//		  $this->form_validation->set_rules('Address','Address','required|xss_clean');
-	//		  $this->form_validation->set_rules('Phone','Phone Number','required|xss_clean|numeric|max_length[10]');
-	//		   if($this->input->post('email_id')=='' && $this->input->post('email_id')!= $this->input->post('Email'))
-	//		   {
-	//		     $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email');
-	//		   }
-	//		   elseif($this->input->post('email_id')!='' && $this->input->post('email_id')!= $this->input->post('Email'))
-	//		   {
-	//		      $this->form_validation->set_rules('Email','Email','required|xss_clean|valid_emails|callback_exist_email');
-	//		   }
-	//		  $this->form_validation->set_rules('Biography','Biography','required|xss_clean');
-	//		  $this->form_validation->set_rules('Areasofexpertise','Areas of expertise','required|xss_clean');
-	//		  $this->form_validation->set_rules('Passsword','Password','required|xss_clean');
-	//		 
-	//
-	//		  if($this->form_validation->run()==false)
-	//		  {
-	//			 if($this->input->post('manager_id')=='')
-	//			  {
-	//				$data = array();
-	//				$data['manager_data'] = '';
-	//				$data['title'] = 'Add Manager';
-	//				$data['heading'] = 'Add Manager';
-	//				$data['right_panel'] = $this->load->view('common/right_panel', '', true);
-	//				$data['common_header'] = $this->load->view('common/header', '', true);
-	//				$data['common_footer'] = $this->load->view('common/footer', '', true);
-	//				$this->load->view('addManager',$data);
-	//			  }
-	//			  else
-	//			  {
-	//				$data = array();
-	//				$manager_data = $this->manager_model->get_manager($id);
-	//				$data['manager_data'] = $manager_data;
-	//				$data['title'] = 'Edit Manager';
-	//				$data['heading'] = 'Edit Manager';
-	//				$data['right_panel'] = $this->load->view('common/right_panel', '', true);
-	//				$data['common_header'] = $this->load->view('common/header', '', true);
-	//				$data['common_footer'] = $this->load->view('common/footer', '', true);
-	//				$this->load->view('addManager',$data);
-	//				  
-	//			  }
-	//			
-	//		  }
-	//		 else
-	//		 { 
-	//		 
-	//		 if ($_FILES['profile_img']['name']!='')
-	//	     {
-	//			$dirPath = FILE_ROOT_PATH.'/media/profile_img/manager/'.$this->input->post('old_profile_img');
-	//  		    if($this->input->post('old_profile_img')!='')
-	//			{
-	//			  unlink(realpath($dirPath));
-	//			}
-	//			 
-	//			
-	//		   if ( ! $this->upload->do_upload($field='profile_img'))
-	//		   {
-	//			   $error = array('error' => $this->upload->display_errors());
-	//			   $this->session->set_flashdata('msg', $error['error']);
-	//				redirect('manager/addManager');
-	//		   }
-	//		  else
-	//		  {
-	//		    $data = $this->upload->data();
-	//			//$this->thumb($data);
-	//		    $image_name = $data['file_name'];
-	//		  }
-	//		}
-	//		else
-	//		{
-	//			$image_name= $this->input->post('old_profile_img');
-	//		}
-	//		
-	//		// for resume upload
-	//		
-	//		if ($_FILES['file1']['name']!='')
-	//	     {
-	//			$dirPath = FILE_ROOT_PATH.'/media/profile_img/manager/manager_cv/'.$this->input->post('old_cv');
-	//  		    if($this->input->post('old_cv')!='')
-	//			{
-	//			  unlink(realpath($dirPath));
-	//			}
-	//			 
-	//			
-	//		   if ( ! $this->upload->do_upload($field='file1'))
-	//		   {
-	//			   $error = array('error' => $this->upload->display_errors());
-	//			   $this->session->set_flashdata('msg', $error['error']);
-	//				redirect('manager/addManager');
-	//		   }
-	//		   else
-	//		   {
-	//		      $data = $this->upload->data();
-	//			  //$this->thumb($data);
-	//		      $upload_cv = $data['file_name'];
-	//		   }
-	//		}
-	//		else
-	//		{
-	//			$upload_cv = $this->input->post('old_cv');
-	//		}
-	//		
-	//		
-	//		//end
-	//		
-	//
-	//
-	//
-	//
-	//		  }
-	//		}
-	//		
-	//     }
-	//
-	//
-
-
-
-		 
+         		 
 		function thumb($data)
 		{
 				$config['image_library'] = 'gd2';
@@ -388,6 +255,7 @@ class Manager extends CI_Controller {
 		
 		public function delete_Manager()
 		{
+			$this->user_model->roleaccess();
 			$uid = $this->input->post('userid');
 			$result = $this->manager_model->get_image_name($uid);
 			
